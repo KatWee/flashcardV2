@@ -10,38 +10,9 @@ import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import Modal from "./CardModal";
-
-const cards = [
-  {
-    id: 1,
-    question: 'Plants',
-    answer: 'Plants are essential for all life.',
-  },
-  {
-    id: 2,
-    question: 'dfasdfsdafdsafdsafsdafdsf',
-    answer: 'asdfasfasdfsafsdafsadfsdafsdafsdfsdafsdfsdfsdafsdafsadfsdfasiuruqwoiuerwiqurpwquroiuweoir',
-  },
-  {
-    id: 3,
-    question: 'Plants',
-    answer: 'Plants are essential for all life.',
-  },
-  {
-    id: 4,
-    question: 'Plants',
-    answer: 'Plants are essential for all life.',
-  },
-  {
-    id: 5,
-    question: 'Plants',
-    answer: 'Plants are essential for all life.',
-  },
-];
-
-function CardComponent() {
+function CardComponent({ cards = [], onEdit, onDelete }) {
   const [showAnswers, setShowAnswers] = React.useState({});
 
   const toggleAnswer = (cardId) => {
@@ -50,16 +21,6 @@ function CardComponent() {
       [cardId]: !prev[cardId],
     }));
   };
-
-    const [open, setOpen] = React.useState(false);
-    const [action, setAction] = React.useState(null);
-    
-    const handleOpen = () => {
-      setAction('edit');
-      setOpen(true);
-    };
-    
-    const handleClose = () => setOpen(false);
 
   return (
     <Box
@@ -70,34 +31,41 @@ function CardComponent() {
         gap: 2,
       }}
     >
-      {cards.map((card, index) => (
-        <Card key={card.id} sx={{ display: 'flex', flexDirection: 'column' }}>
+      {cards.length > 0 ? (
+        cards.map((card) => (
+          <Card key={card.id} sx={{ display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flexGrow: 1 }}>
-                <Typography gutterBottom sx={{fontSize: 20, wordBreak: 'break-word' }}>
+              <Typography gutterBottom sx={{ fontSize: 20, wordBreak: 'break-word' }}>
                 {card.question}
-                </Typography>
-                <Button size="small" onClick={() => toggleAnswer(card.id)}><VisibilityIcon/>Show Answer</Button>
-                {showAnswers[card.id] && (
-                  <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
+              </Typography>
+              <Button size="small" onClick={() => toggleAnswer(card.id)}>
+                {!showAnswers[card.id] ? <VisibilityIcon /> : <CheckCircleIcon />}
+                {!showAnswers[card.id] ? 'Show Answer' : 'Clear' }
+              </Button>
+              {showAnswers[card.id] && (
+                <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
                   {card.answer}
-                  </Typography>
-                )}
+                </Typography>
+              )}
             </CardContent>
             <CardActions>
-                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                    <Button size="small" onClick={handleOpen}>
-                        <EditNoteIcon />
-                    </Button>
-                    <Button size="small" sx={{ color: '#f44336' }}>
-                        <DeleteIcon />
-                    </Button>
-                </Box>
-                
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                <Button size="small" onClick={() => onEdit(card)}>
+                  <EditNoteIcon />
+                </Button>
+                <Button size="small" sx={{ color: '#f44336' }} onClick={() => onDelete(card.id)}>
+                  <DeleteIcon />
+                </Button>
+              </Box>
             </CardActions>
-        </Card>
-      ))}
+          </Card>
+        ))
+      ) : (
+        <Typography variant="body1" sx={{ textAlign: 'center', width: '100%' }}>
+          No flashcards yet.
+        </Typography>
+      )}
 
-      <Modal open={open} handleClose={handleClose} action={action}/>
     </Box>
   );
 }

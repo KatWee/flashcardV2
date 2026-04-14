@@ -18,7 +18,16 @@ const style = {
     p: 4,
 };
 
-export default function ModalComponent({ open, handleClose, action }) {
+export default function ModalComponent({
+    open,
+    handleClose,
+    action,
+    question,
+    answer,
+    onQuestionChange,
+    onAnswerChange,
+    onSave,
+}) {
     return (
         <div>
             <Modal
@@ -32,9 +41,19 @@ export default function ModalComponent({ open, handleClose, action }) {
                         {action === 'create' ? 'Create a new card' : 'Edit card'}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <TextInput label="Question" />
-                        <TextInput label="Answer" />
-                        <Button variant="contained" onClick={handleClose}
+                        <TextInput
+                            label="Question"
+                            value={question}
+                            onChange={(event) => onQuestionChange(event.target.value)}
+                        />
+                        <TextInput
+                            label="Answer"
+                            value={answer}
+                            onChange={(event) => onAnswerChange(event.target.value)}
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={onSave}
                             sx={{ backgroundColor: 'var(--primary)', width: '100%' }}
                         >
                             {action === 'create' ? 'Create Card' : 'Save Changes'}
