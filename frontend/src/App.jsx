@@ -15,6 +15,7 @@ function App() {
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
   const [cards, setCards] = useState([]);
+  const [searchKeyword, setsearchKeyword] = useState('');
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/flashcards")
@@ -46,6 +47,10 @@ function App() {
     setEditingCardId(null);
     setNewQuestion('');
     setNewAnswer('');
+  };
+
+  const handleSearchChange = (event) => {
+    setsearchKeyword(event.target.value);
   };
 
   const createCard = async () => {
@@ -147,7 +152,7 @@ function App() {
       <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, px: 2 }}>
         <CreateButton onClick={handleOpen} />
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-          <SearchBar />
+          <SearchBar value={searchKeyword} onChange={handleSearchChange} />
         </Box>
       </Box>
       <Modal
@@ -162,7 +167,16 @@ function App() {
       />
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <Box sx={{ width: '80%' }}>
-          <Card cards={cards.filter(card => !card.status)} onEdit={handleEdit} onDelete={deleteCard} onChangeStatus={updateCardStatus} />
+          <Card
+            cards={cards.filter(
+              (card) =>
+                !card.status &&
+                card.question.toLowerCase().includes(searchKeyword.toLowerCase())
+            )}
+            onEdit={handleEdit}
+            onDelete={deleteCard}
+            onChangeStatus={updateCardStatus}
+          />
         </Box>
       </Box>
 
