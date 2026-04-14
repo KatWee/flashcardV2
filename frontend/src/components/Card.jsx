@@ -11,8 +11,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import RestoreIcon from '@mui/icons-material/Restore';
 
-function CardComponent({ cards = [], onEdit, onDelete }) {
+function CardComponent({ cards = [], onEdit, onDelete, onChangeStatus }) {
   const [showAnswers, setShowAnswers] = React.useState({});
 
   const toggleAnswer = (cardId) => {
@@ -39,14 +41,26 @@ function CardComponent({ cards = [], onEdit, onDelete }) {
                 {card.question}
               </Typography>
               <Button size="small" onClick={() => toggleAnswer(card.id)}>
-                {!showAnswers[card.id] ? <VisibilityIcon /> : <CheckCircleIcon />}
-                {!showAnswers[card.id] ? 'Show Answer' : 'Clear' }
+                {!showAnswers[card.id] ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                {!showAnswers[card.id] ? 'Show Answer' : 'Hide Answer' }
               </Button>
               {showAnswers[card.id] && (
-                <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
-                  {card.answer}
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
+                    {card.answer} 
+                  </Typography>
+                  {!card.status && 
+                  <Button size="small" onClick={() => onChangeStatus(card)}>
+                    <CheckCircleIcon /> Clear
+                  </Button>
+                  }
+                </Box>
               )}
+              {card.status && 
+                <Button size="small" onClick={() => onChangeStatus(card)}>
+                  <RestoreIcon /> Restore
+                </Button>
+                }
             </CardContent>
             <CardActions>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>

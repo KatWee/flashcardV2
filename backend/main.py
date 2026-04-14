@@ -60,7 +60,7 @@ def get_card(card_id: str):
 def update_card(card_id: str, card: Flashcard):
     result = cards_col.update_one(
         {"_id": ObjectId(card_id)},
-        {"$set": {"question": card.question, "answer": card.answer}}
+        {"$set": {"question": card.question, "answer": card.answer, "status": card.status}}
     )
     if result.matched_count == 0:
         raise HTTPException(404, "Card not found")

@@ -75,6 +75,8 @@ function App() {
   const updateCard = async () => {
     if (!editingCardId) return;
 
+    const EditingCard = cards.find((card) => card.id === editingCardId);
+
     try {
       const res = await fetch(`http://127.0.0.1:8000/flashcards/${editingCardId}`, {
         method: 'PUT',
@@ -82,7 +84,7 @@ function App() {
         body: JSON.stringify({
           question: newQuestion,
           answer: newAnswer,
-          status: false,
+          status: EditingCard.status,
         }),
       });
 
@@ -114,6 +116,31 @@ function App() {
     }
   };
 
+  const updateCardStatus = async (card) => {
+    if (!card?.id) return;
+
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/flashcards/${card.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: card.question,
+          answer: card.answer,
+          status: !card.status,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Status update failed: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setCards((prev) => prev.map((existing) => (existing.id === card.id ? data : existing)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div>
       <MenuAppBar />
@@ -135,7 +162,15 @@ function App() {
       />
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <Box sx={{ width: '80%' }}>
-          <Card cards={cards} onEdit={handleEdit} onDelete={deleteCard} />
+          <Card cards={cards.filter(card => !card.status)} onEdit={handleEdit} onDelete={deleteCard} onChangeStatus={updateCardStatus} />
+        </Box>
+      </Box>
+
+      <hr style={{ width: '80%', marginTop: '2em', marginBottom: '2em' }}/>
+      <h2>Archived Cards</h2>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Box sx={{ width: '80%' }}>
+          <Card cards={cards.filter(card => card.status)} onEdit={handleEdit} onDelete={deleteCard} onChangeStatus={updateCardStatus} />
         </Box>
       </Box>
       
