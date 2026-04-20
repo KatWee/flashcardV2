@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { useState } from 'react';
 
 import TextInput from './TextInput';
 
@@ -18,7 +19,16 @@ const style = {
     p: 4,
 };
 
-export default function ModalComponent({ open, handleClose, action }) {
+export default function ModalComponent({ open, handleClose, onLogin }) {
+    const [credentials, setCredentials] = useState({ username: '', password: '' });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onLogin(credentials);
+        setCredentials({ username: '', password: '' });
+        handleClose();
+    };
+
     return (
         <div>
             <Modal
@@ -28,18 +38,27 @@ export default function ModalComponent({ open, handleClose, action }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
                         Welcome to FlashCard Learning App
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <TextInput label="Username" />
-                        <TextInput label="Password" />
-                        <Button variant="contained" onClick={handleClose}
-                            sx={{ backgroundColor: 'var(--primary)', width: '100%' }}
+                    <form onSubmit={handleSubmit}>
+                        <TextInput 
+                            label="Username" 
+                            value={credentials.username}
+                            onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                        />
+                        <TextInput 
+                            label="Password" 
+                            type="password"
+                            value={credentials.password}
+                            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                        />
+                        <Button variant="contained" type="submit"
+                            sx={{ backgroundColor: 'var(--primary)', width: '100%', mt: 2 }}
                         >
-                            Sing in
+                            Sign in
                         </Button>
-                    </Typography>
+                    </form>
                 </Box>
             </Modal>
         </div>

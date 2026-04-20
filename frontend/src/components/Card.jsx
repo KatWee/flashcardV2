@@ -14,7 +14,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import RestoreIcon from '@mui/icons-material/Restore';
 
-function CardComponent({ cards = [], onEdit, onDelete, onChangeStatus }) {
+function CardComponent({ cards = [], onEdit, onDelete, onChangeStatus, token }) {
   const [showAnswers, setShowAnswers] = React.useState({});
 
   const toggleAnswer = (cardId) => {
@@ -62,16 +62,19 @@ function CardComponent({ cards = [], onEdit, onDelete, onChangeStatus }) {
                 </Button>
                 }
             </CardContent>
-            <CardActions>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                <Button size="small" onClick={() => onEdit(card)}>
-                  <EditNoteIcon />
-                </Button>
-                <Button size="small" sx={{ color: '#f44336' }} onClick={() => onDelete(card.id)}>
-                  <DeleteIcon />
-                </Button>
-              </Box>
-            </CardActions>
+            {token && (
+                <CardActions>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                  <Button size="small" onClick={() => onEdit(card)}>
+                    <EditNoteIcon />
+                  </Button>
+                  <Button size="small" sx={{ color: '#f44336' }} onClick={() => onDelete(card.id)}>
+                    <DeleteIcon />
+                  </Button>
+                </Box>
+              </CardActions>
+            )}
+            
           </Card>
         ))
       ) : (

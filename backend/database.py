@@ -6,3 +6,4 @@ client = MongoClient(MONGO_URI)
 
 db = client["flashcard_app"]
 cards_col = db["flashcards"]
+users_col = db["users"]

@@ -2,13 +2,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-export default function BasicTextFields({ label, value, onChange }) {
+export default function BasicTextFields({ label, value, onChange, type = "text", ...props }) {
     return (
         <Box
-            component="form"
             sx={{ m: 1 }}
-            noValidate
-            autoComplete="off"
         >
             <TextField
                 id={`outlined-basic-${label}`}
@@ -17,6 +14,8 @@ export default function BasicTextFields({ label, value, onChange }) {
                 sx={{ width: '100%' }}
                 value={value}
                 onChange={onChange}
+                type={type}
+                {...props}
             />
         </Box>
     );

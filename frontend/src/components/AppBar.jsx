@@ -15,13 +15,8 @@ import Button from '@mui/material/Button';
 
 import UserModal from "./LoginModal";
 
-export default function MenuAppBar() {
-    const [auth, setAuth] = React.useState(true);
+export default function MenuAppBar({ onLogin, onLogout, isAuthenticated, username }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleChange = (event) => {
-        setAuth(event.target.checked);
-    };
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -32,8 +27,13 @@ export default function MenuAppBar() {
     };
 
     const [open, setOpen] = React.useState(false);
-    const handleLoginOpen = () => {setOpen(true);};
+    const handleLoginOpen = () => { setOpen(true); };
     const handleLoginClose = () => setOpen(false);
+
+    const handleLogoutClick = () => {
+        handleClose();
+        onLogout();
+    };
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -42,7 +42,7 @@ export default function MenuAppBar() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         FlashCard Learning App
                     </Typography>
-                    {auth ? (
+                    {isAuthenticated ? (
                         <div>
                             <IconButton
                                 size="large"
@@ -69,16 +69,16 @@ export default function MenuAppBar() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={() => { handleClose(); setAuth(false); }}>Sign out</MenuItem>
+                                <MenuItem onClick={handleLogoutClick}>Sign out</MenuItem>
                             </Menu>
                         </div>
                     ) : (
-                        <Button color="inherit" onClick={() => { setAuth(true); handleLoginOpen(); }}>Sign in</Button>
+                        <Button color="inherit" onClick={handleLoginOpen}>Sign in</Button>
                     )}
                 </Toolbar>
             </AppBar>
 
-            <UserModal open={open} handleClose={handleLoginClose}/>
+            <UserModal open={open} handleClose={handleLoginClose} onLogin={onLogin} />
         </Box>
     );
 }
