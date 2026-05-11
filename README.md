@@ -62,3 +62,14 @@ flashcard-app
 │
 └── README.md                   
 ```
+## How to run the project
+1. run backend
+```
+> cd backend
+> uvicorn main:app --reload
+```
+2. run forntend
+```
+> cd frontend
+> npm start
+```
