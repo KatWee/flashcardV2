@@ -73,3 +73,6 @@ flashcard-app
 > cd frontend
 > npm start
 ```
+## Admin
+user: testuser
+password: testuser
